@@ -131,6 +131,10 @@ elif host_machine.system() == 'vinix'
 	rtdl_include_dirs += include_directories('sysdeps/vinix/include')
 	libc_include_dirs += include_directories('sysdeps/vinix/include')
 	subdir('sysdeps/vinix')
+elif host_machine.system() == 'francium'
+	rtdl_include_dirs += include_directories('sysdeps/francium/include')
+	libc_include_dirs += include_directories('sysdeps/francium/include')
+	subdir('sysdeps/francium')
 elif host_machine.system() == 'lyre'
 	rtdl_include_dirs += include_directories('sysdeps/lyre/include')
 	libc_include_dirs += include_directories('sysdeps/lyre/include')
@@ -302,7 +306,7 @@ if not headers_only
 		# Some architectures require us to link with libgcc or compiler_rt
 		libgcc = meson.get_compiler('c').find_library('gcc', required: false)
 
-		compiler_rt_name = 'libclang_rt.builtins-' + host_machine.cpu_family()
+		compiler_rt_name = 'clang_rt.builtins-' + host_machine.cpu_family()
 		compiler_rt = meson.get_compiler('c').find_library(compiler_rt_name, required: false)
 
 		if libgcc.found()
