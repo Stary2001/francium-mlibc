@@ -11,7 +11,8 @@ rtdl_sources += [
 libc_include_dirs += francium_incl
 
 libc_sources += files(
-	'generic/syscall.cpp',
+	'generic/entry.cpp',
+	'generic/misc.cpp',
 	'generic/stub.cpp',
 	'generic/files.cpp'
 )
@@ -20,11 +21,11 @@ libc_sources += [
 
 if host_machine.cpu_family() == 'aarch64'
 	libc_sources += files(
-
+		'aarch64/aarch64_syscalls.s'
 	)
 elif host_machine.cpu_family() == 'x86_64'
 	libc_sources += files(
-
+		'x86_64/x86_64-syscalls.s'
 	)
 else
 	error('Unknown architecture')
