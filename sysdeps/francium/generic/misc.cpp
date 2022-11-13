@@ -55,7 +55,8 @@ namespace mlibc {
 	int sys_tcb_set(void *pointer) {
 		sys_libc_log("sys_tcb_set hit");
 		#if defined(__aarch64__)
-        asm volatile ("msr tpidr_el0, %0" :: "r"(pointer));
+		uintptr_t thread_data = reinterpret_cast<uintptr_t>(pointer) + sizeof(Tcb) - 0x10;
+        asm volatile ("msr tpidr_el0, %0" :: "r"(thread_data));
 		#else
 			STUB_ONLY
 		#endif
