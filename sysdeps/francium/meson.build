@@ -1,31 +1,24 @@
-
-francium_incl = include_directories()
-
-rtdl_include_dirs += francium_incl
 rtdl_sources += files(
 )
-rtdl_sources += [
-]
-
-#libc_include_dirs += include_directories('../../../ports/libdrm/include')
-libc_include_dirs += francium_incl
 
 libc_sources += files(
+	'generic/thread.cpp',
+	'generic/memory.cpp',
 	'generic/entry.cpp',
 	'generic/misc.cpp',
 	'generic/stub.cpp',
 	'generic/files.cpp'
 )
-libc_sources += [
-]
 
 if host_machine.cpu_family() == 'aarch64'
 	libc_sources += files(
-		'aarch64/aarch64_syscalls.s'
+#		'aarch64/aarch64_syscalls.s',
+		'aarch64/thread-entry.S'
 	)
 elif host_machine.cpu_family() == 'x86_64'
 	libc_sources += files(
-		'x86_64/x86_64-syscalls.s'
+#		'x86_64/x86_64-syscalls.s',
+		'x86_64/thread-entry.S'
 	)
 else
 	error('Unknown architecture')

@@ -1,7 +1,25 @@
+#include <stdio.h>
 #include <bits/ensure.h>
 #include <mlibc/all-sysdeps.hpp>
 
-#define STUB_ONLY { __ensure(!"STUB_ONLY function was called"); __builtin_unreachable(); }
+#define UNW_LOCAL_ONLY
+#include <unwind.h>
+
+/*_Unwind_Reason_Code trace_func(struct _Unwind_Context *context, void *arg) {
+        int *depth = (int*) arg;
+        printf("%i %016lx", *depth, _Unwind_GetIP(context));
+        (*depth)++;
+        return _URC_NO_REASON;
+}
+
+void show_backtrace (void) {
+        int depth = 0;
+	printf("Backtrace??\n");
+        _Unwind_Backtrace(trace_func, &depth);
+	printf("Backtrace??\n");
+}*/
+
+#define STUB_ONLY { /*show_backtrace();*/ __ensure(!"STUB_ONLY function was called"); __builtin_unreachable(); }
 #define UNUSED(x) (void)(x);
 
 namespace mlibc {
@@ -18,7 +36,6 @@ int sys_chdir(const char *path) STUB_ONLY
 int sys_chmod(const char *pathname, mode_t mode) STUB_ONLY
 int sys_chroot(const char *path) STUB_ONLY
 int sys_clock_getres(int clock, time_t *secs, long *nanos) STUB_ONLY
-int sys_clone(void *tcb, pid_t *pid_out, void *stack) STUB_ONLY
 int sys_connect(int fd, const struct sockaddr *addr_ptr, socklen_t addr_length) STUB_ONLY
 int sys_delete_module(const char *name, unsigned flags) STUB_ONLY
 int sys_dup2(int fd, int flags, int newfd) STUB_ONLY
@@ -44,11 +61,10 @@ int sys_fstatfs(int fd, struct statfs *buf) STUB_ONLY
 int sys_fstatvfs(int fd, struct statvfs *out) STUB_ONLY
 int sys_fsync(int fd) STUB_ONLY
 int sys_ftruncate(int fd, size_t size) STUB_ONLY
-//int sys_futex_tid() STUB_ONLY
 int sys_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask) STUB_ONLY
 int sys_getcpu(int *cpu) STUB_ONLY
 int sys_getcwd(char *buffer, size_t size) STUB_ONLY
-int sys_getentropy(void *buffer, size_t length) STUB_ONLY
+
 int sys_getgroups(size_t size, const gid_t *list, int *ret) STUB_ONLY
 int sys_gethostname(char *buffer, size_t bufsize) STUB_ONLY
 int sys_getitimer(int which, struct itimerval *curr_value) STUB_ONLY
@@ -61,11 +77,7 @@ int sys_inotify_add_watch(int ifd, const char *path, uint32_t mask, int *wd) STU
 int sys_inotify_create(int flags, int *fd) STUB_ONLY
 int sys_inotify_rm_watch(int ifd, int wd) STUB_ONLY
 int sys_ioctl(int fd, unsigned long request, void *arg, int *result) STUB_ONLY
-int sys_isatty(int fd) {
-	sys_libc_log("isatty stub");
-	return 0;
-}
-int sys_kill(int, int) STUB_ONLY
+
 int sys_klogctl(int type, char *bufp, int len, int *out) STUB_ONLY
 int sys_linkat(int olddirfd, const char *old_path, int newdirfd, const char *new_path, int flags) STUB_ONLY
 int sys_link(const char *old_path, const char *new_path) STUB_ONLY
@@ -90,7 +102,7 @@ int sys_pipe(int *fds, int flags) STUB_ONLY
 int sys_poll(struct pollfd *fds, nfds_t count, int timeout, int *num_events) STUB_ONLY
 int sys_prctl(int option, va_list va, int *out) STUB_ONLY
 int sys_pread(int fd, void *buf, size_t n, off_t off, ssize_t *bytes_read) STUB_ONLY
-int sys_prepare_stack(void **stack, void *entry, void *user_arg, void* tcb, size_t *stack_size, size_t *guard_size) STUB_ONLY
+//int sys_prepare_stack(void **stack, void *entry, void *user_arg, void* tcb, size_t *stack_size, size_t *guard_size) STUB_ONLY
 int sys_pselect(int num_fds, fd_set *read_set, fd_set *write_set, fd_set *except_set, const struct timespec *timeout, const sigset_t *sigmask, int *num_events) STUB_ONLY
 int sys_ptrace(long req, pid_t pid, void *addr, void *data, long *out) STUB_ONLY
 int sys_pwrite(int fd, const void *buf, size_t n, off_t off, ssize_t *bytes_read) STUB_ONLY
@@ -119,12 +131,16 @@ int sys_setsockopt(int fd, int layer, int number, const void *buffer, socklen_t 
 int sys_setuid(uid_t uid) STUB_ONLY
 int sys_sigaction(int, const struct sigaction *__restrict, struct sigaction *__restrict) {
 	// Ignore
-	sys_libc_log("sigaction ignored");
+	//sys_libc_log("sys_sigaction ignored");
 	return 0;
 }
 int sys_sigaltstack(const stack_t *ss, stack_t *oss) STUB_ONLY
 int sys_signalfd_create(const sigset_t *, int flags, int *fd) STUB_ONLY
-int sys_sigprocmask(int how, const sigset_t *__restrict set, sigset_t *__restrict retrieve) STUB_ONLY
+int sys_sigprocmask(int how, const sigset_t *__restrict set, sigset_t *__restrict retrieve) {
+	// Ignore
+	//sys_libc_log("sys_sigprocmask ignored");
+	return 0;
+}
 int sys_sigsuspend(const sigset_t *set) STUB_ONLY
 int sys_sleep(time_t *secs, long *nanos) STUB_ONLY
 int sys_socket(int family, int type, int protocol, int *fd) STUB_ONLY
@@ -155,7 +171,7 @@ int sys_vm_readahead(void *pointer, size_t size) STUB_ONLY
 int sys_vm_remap(void *pointer, size_t size, size_t new_size, void **window) STUB_ONLY
 int sys_waitpid(pid_t pid, int *status, int flags, struct rusage *ru, pid_t *ret_pid) STUB_ONLY
 pid_t sys_getpgid(pid_t pid, pid_t *pgid) STUB_ONLY
-pid_t sys_getpid() STUB_ONLY
+//pid_t sys_getpid() {
 pid_t sys_getppid() STUB_ONLY
 pid_t sys_getsid(pid_t pid, pid_t *sid) STUB_ONLY
 pid_t sys_gettid() STUB_ONLY
@@ -165,10 +181,6 @@ void sys_sync() STUB_ONLY
 void sys_yield() STUB_ONLY
 [[noreturn]] void sys_thread_exit() STUB_ONLY
 
-int sys_vm_map(void *hint, size_t size, int prot, int flags, int fd, off_t offset, void **window) STUB_ONLY
 int sys_clock_get(int clock, time_t *secs, long *nanos) STUB_ONLY
-int sys_futex_wait(int *pointer, int expected, const struct timespec *time) STUB_ONLY
-int sys_futex_wake(int *pointer) STUB_ONLY
-
 #pragma GCC diagnostic pop
 }

@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <asm/ioctls.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <abi-bits/fcntl.h>
 
 #include "syscall.h"
@@ -19,7 +20,11 @@ namespace mlibc {
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wunused-parameter"
 
-	int sys_open(const char *pathname, int flags, mode_t mode, int *fd) STUB_ONLY
+	int sys_open(const char *pathname, int flags, mode_t mode, int *fd) {
+		printf("open: '%s'\n", pathname);
+		STUB_ONLY
+	}
+
 	int sys_read(int fd, void *buf, size_t count, ssize_t *bytes_read) STUB_ONLY
 	int sys_write(int fd, const void *buffer, size_t count, ssize_t *written) {
 		if(fd == 1 || fd == 2) {
