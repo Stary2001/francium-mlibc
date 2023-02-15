@@ -19,13 +19,10 @@
 
 namespace mlibc {
 	int sys_anon_allocate(size_t size, void **pointer) {
-		/*
-			pub const PROT_EXEC: u32 = 0x0001;
-			pub const PROT_WRITE: u32 = 0x0002;
-			pub const PROT_READ: u32 = 0x0004;
-		*/
-		int e = map_to_errno(syscall_map_memory(0, size, 2|4, pointer));
-		if(e == 0) memset(*pointer, 0, size);
+		// Ensure this matches PagePermission on pain of death
+
+		int e = map_to_errno(syscall_map_memory(0, size, 1, pointer));
+		if(e == 0) memset(*pointer, 0xaa, size);
 		return e;
 	}
 
