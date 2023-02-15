@@ -30,13 +30,15 @@ extern "C" void __mlibc_enter_thread(void *entry, void *user_arg, Tcb *tcb) {
 }
 
 namespace mlibc {
-	static constexpr size_t default_stacksize = 0x200000;
+	static constexpr size_t default_stacksize = 0x400000;
 
 	int sys_prepare_stack(void **stack, void *entry, void *user_arg, void *tcb, size_t *stack_size, size_t *guard_size) {
 		uintptr_t *sp;
 		if (!*stack_size)
 			*stack_size = default_stacksize;
 		*guard_size = 0;
+
+		printf("Got stacksize %08x\n", *stack_size);
 
 		if (*stack) {
 			sp = reinterpret_cast<uintptr_t *>(*stack);
@@ -45,6 +47,7 @@ namespace mlibc {
 			sp = reinterpret_cast<uintptr_t *>(reinterpret_cast<uintptr_t>(*stack) + *stack_size);
 		}
 
+		*--sp = reinterpret_cast<uintptr_t>(0ul);
 		*--sp = reinterpret_cast<uintptr_t>(tcb);
 		*--sp = reinterpret_cast<uintptr_t>(user_arg);
 		*--sp = reinterpret_cast<uintptr_t>(entry);
