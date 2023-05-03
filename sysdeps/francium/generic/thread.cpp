@@ -38,8 +38,6 @@ namespace mlibc {
 			*stack_size = default_stacksize;
 		*guard_size = 0;
 
-		printf("Got stacksize %08x\n", *stack_size);
-
 		if (*stack) {
 			sp = reinterpret_cast<uintptr_t *>(*stack);
 		} else {

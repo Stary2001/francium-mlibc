@@ -26,6 +26,7 @@ namespace mlibc {
 	}
 
 	int sys_read(int fd, void *buf, size_t count, ssize_t *bytes_read) STUB_ONLY
+	
 	int sys_write(int fd, const void *buffer, size_t count, ssize_t *written) {
 		if(fd == 1 || fd == 2) {
 			syscall_debug_output((const char*)buffer, count);
@@ -36,9 +37,10 @@ namespace mlibc {
 			return -ENOSYS;
 		}
 	}
+	
 	int sys_seek(int fd, off_t offset, int whence, off_t *new_offset) {
-			sys_libc_log("seek stub");
-	return 0;
+		sys_libc_log("seek stub");
+		return 0;
 	}
 	int sys_close(int fd) STUB_ONLY
 

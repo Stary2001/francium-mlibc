@@ -88,7 +88,9 @@ namespace mlibc {
 	}
 
 	int sys_clock_get(int clock, time_t *secs, long *nanos) {
-		assert(clock == CLOCK_MONOTONIC); 
+		// Fuck it you get monotonic anyway
+		//assert(clock == CLOCK_MONOTONIC);
+
 		uint64_t ticks = syscall_get_system_tick();
 		*secs = ticks / 1000000000;
 		*nanos = ticks % 1000000000;

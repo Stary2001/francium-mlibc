@@ -12,12 +12,12 @@ libc_sources += files(
 
 if host_machine.cpu_family() == 'aarch64'
 	libc_sources += files(
-#		'aarch64/aarch64_syscalls.s',
+		'aarch64/aarch64_syscalls.s',
 		'aarch64/thread-entry.S'
 	)
 elif host_machine.cpu_family() == 'x86_64'
 	libc_sources += files(
-#		'x86_64/x86_64-syscalls.s',
+		'x86_64/x86_64_syscalls.s',
 		'x86_64/thread-entry.S'
 	)
 else
