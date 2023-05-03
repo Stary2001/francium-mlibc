@@ -490,7 +490,7 @@ void pthread_cleanup_pop(int execute) {
 }
 
 int pthread_setname_np(pthread_t, const char *) {
-	mlibc::infoLogger() << "mlibc: pthread_setname_np is a stub" << frg::endlog;
+	//mlibc::infoLogger() << "mlibc: pthread_setname_np is a stub" << frg::endlog;
 	return 0;
 }
 
